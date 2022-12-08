@@ -6,26 +6,59 @@ var switchComposition = require('../src/');
 var noop = async () => {};
 
 
-var addFoo = (context, next) => { context.foo = 'FOO' };
-var addBar = (context, next) => { context.bar = 'BAR' };
-var addFallback = (context, next) => { context.fallback = 'FALLBACK' }
+var addFoo = async (context, next) => {
+    context.foo = 'FOO'; await next();
+};
+var addBar = async (context, next) => {
+    context.bar = 'BAR'; await next();
+};
+var addFallback = async (context, next) => {
+    context.fallback = 'FALLBACK'; await next();
+}
 
 var defaultBag = {
     by: '/switchProp',
     branches: {
-        'A': [ addFoo ],
-        'B': [ addBar ]
+        'foo': [ addFoo ],
+        'bar': [ addBar ]
     }
 }
 
 
 describe('index.js', () => {
+    it('throws when pointer is omitted', () => {
+        var error;
+        try {
+            switchComposition({});
+        } catch (e) { error = e }
+
+        expect(error).to.be.an.instanceof(Error);
+    });
+    
+    it('throws when pointer is non-string', () => {
+        var error;
+        try {
+            switchComposition({ by: 1 });
+        } catch (e) { error = e }
+
+        expect(error).to.be.an.instanceof(Error);
+    });
+    
+    it('throws when pointer is relative', () => {
+        var error;
+        try {
+            switchComposition({ by: 'relative/pointer' });
+        } catch (e) { error = e }
+
+        expect(error).to.be.an.instanceof(Error);
+    });
+
     it('throws when no middleware stack is found', async () => {
         var composition = switchComposition(defaultBag);
 
         var context = { switchProp: 'INVALID' }
         await composition(context, noop).then(
-            () => { throw new Error('error wasnt thrown') }
+            () => { throw new Error('error wasnt thrown') },
             (e) => { expect(e).to.be.an.instanceof(Error) }
         );
     });
@@ -64,7 +97,7 @@ describe('index.js', () => {
         var called = false;
         var next = () => { called = true };
 
-        var context = {}
+        var context = { switchProp: 'foo' }
         await composition(context, next);
 
         expect(called).to.be.true;
