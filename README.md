@@ -1,10 +1,13 @@
 # @cdxoo/switch-koa-composition
 
+Switches nested middleware stacks based on context value indicated by
+given json pointer.
+
 ```javascript
-const switchComposition = require('switch-koa-compose');
+const switchComposition = require('@cdxoo/switch-koa-compose');
 
 const middleware = switchComposition({
-    by: '/pointer/to/value/in/context',
+    by: '/json/pointer/to/value/in/context',
     branches: {
         'foo': [ barMiddleware, anotherBarMiddleware ],
         'bar': [ fooMiddleware, anotherFooMiddleware ],
