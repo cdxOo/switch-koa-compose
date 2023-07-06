@@ -130,4 +130,21 @@ describe('index.js', () => {
         await middleware(context);
         expect(context.foo).to.equal('FOO');
     });
+
+    it('can use factory to pass custom compose', async () => {
+        var called = false;
+        var next = () => { called = true };
+
+        var customSwitchComposition = switchComposition.custom({
+            compose: (middlewares) => async (context, next) => {
+                called = true;
+            }
+        });
+
+        var composition = customSwitchComposition(defaultBag);
+        var context = { switchProp: 'foo' };
+        await composition(context, next);
+        
+        expect(called).to.be.true;
+    });
 })
