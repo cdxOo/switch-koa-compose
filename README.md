@@ -16,4 +16,10 @@ const middleware = switchComposition({
     // optional; will throw when omitted and no branch was found
     fallback: [ someFallbackMiddlware ]
 });
+
+// "by" can also be a function
+const middleware = switchComposition({
+    by: (context) => context.someFunctionMaybe(),
+    /* ... */
+});
 ```
