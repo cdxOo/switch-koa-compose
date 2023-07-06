@@ -4,9 +4,16 @@
   "description": "easily switch koa middleware stacks at run time",
   "main": "dist/index.js",
   "scripts": {
+    "clean": "rm -rf ./dist && mkdir -p dist",
+    "build": "npm run clean && npm run build:cjs",
+    "build:cjs": "npx babel --env-name cjs --out-dir ./dist ./src",
+    "test": "npm run test:functional",
+    "test:functional": "npx mocha --config mocha.config.json test/",
     "test": "make test",
-    "clean": "make clean",
-    "build": "make build"
+    "prepublishOnly": "npm run build",
+    "release:dry": "npx release-it --dry-run --no-npm",
+    "release:beta": "npx release-it --preRelease=beta",
+    "release": "npx release-it"
   },
   "files": [
     "dist"
@@ -26,7 +33,8 @@
     "@babel/core": "~7.20.5",
     "@babel/preset-env": "^7.20.2",
     "chai": "^4.3.7",
-    "mocha": "^10.1.0"
+    "mocha": "^10.1.0",
+    "release-it": "^15.11.0"
   },
   "dependencies": {
     "jsonpointer": "^5.0.1",
