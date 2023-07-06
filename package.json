@@ -9,8 +9,7 @@
     "build:cjs": "npx babel --env-name cjs --out-dir ./dist ./src",
     "test": "npm run test:functional",
     "test:functional": "npx mocha --config mocha.config.json test/",
-    "test": "make test",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run test && npm run build",
     "release:dry": "npx release-it --dry-run --no-npm",
     "release:beta": "npx release-it --preRelease=beta",
     "release": "npx release-it"
