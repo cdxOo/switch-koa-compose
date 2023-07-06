@@ -4,23 +4,37 @@ var jsonpointer = require('jsonpointer');
 
 var switchKoaComposition = (bag) => {
     var {
-        by: pointer,
+        by: pointerOrLambda,
         branches = {},
         fallback,
     } = bag;
 
-    if (!pointer || typeof pointer !== 'string') {
-        throw new Error('property "by" must be a json pointer');
+    var lambda = undefined;
+    if (!pointerOrLambda) {
+        throw new Error('property "by" must be string or function');
     }
-    if (!pointer.startsWith('/')) {
-        throw new Error('can not handle relative json pointers');
+    else {
+        switch (typeof pointerOrLambda) {
+            case 'string':
+                var pointer = pointerOrLambda;
+                if (!pointer.startsWith('/')) {
+                    throw new Error('can not handle relative json pointers');
+                }
+                lambda = (context) => jsonpointer.get(context, pointer);
+                break;
+            case 'function':
+                lambda = pointerOrLambda;
+                break;
+            default:
+                throw new Error('property "by" must be string or function');
+        }
     }
 
     return async (context, next) => {
-        var value = jsonpointer.get(context, pointer);
+        var value = lambda(context);
         var branch = branches[value] || fallback;
         if (!branch) {
-            throw new Error(`no branch found for ${pointer} = "${value}"`);
+            throw new Error(`no branch found for "${pointerOrLambda}" = "${value}"`);
         }
         await compose(branch)(context, next);
     }

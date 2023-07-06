@@ -35,7 +35,7 @@ describe('index.js', () => {
         expect(error).to.be.an.instanceof(Error);
     });
     
-    it('throws when pointer is non-string', () => {
+    it('throws when pointer is non-string and non-function', () => {
         var error;
         try {
             switchComposition({ by: 1 });
@@ -64,8 +64,26 @@ describe('index.js', () => {
     });
 
 
-    it('does the stuff', async () => {
+    it('does the stuff when switching by pointer', async () => {
         var composition = switchComposition(defaultBag);
+        var context;
+
+        context = { switchProp: 'foo' }
+        await composition(context, noop);
+        expect(context.foo).to.equal('FOO');
+        expect(context.bar).to.not.exist;
+
+        context = { switchProp: 'bar' }
+        await composition(context, noop);
+        expect(context.foo).to.not.exist;
+        expect(context.bar).to.equal('BAR');
+    });
+    
+    it('does the stuff when switching by lambda', async () => {
+        var composition = switchComposition({
+            ...defaultBag,
+            by: (context) => context.switchProp
+        });
         var context;
 
         context = { switchProp: 'foo' }
