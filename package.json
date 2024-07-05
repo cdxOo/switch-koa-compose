@@ -1,6 +1,6 @@
 {
   "name": "@cdxoo/switch-koa-compose",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "easily switch koa middleware stacks at run time",
   "main": "dist/index.js",
   "scripts": {
