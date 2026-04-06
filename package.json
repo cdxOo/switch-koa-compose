@@ -28,11 +28,11 @@
   },
   "homepage": "https://github.com/cdxOo/switch-koa-compose#readme",
   "devDependencies": {
-    "@babel/cli": "~7.19.3",
-    "@babel/core": "~7.20.5",
-    "@babel/preset-env": "^7.20.2",
-    "chai": "^4.3.7",
-    "mocha": "^10.1.0",
+    "@babel/cli": "~7.28.6",
+    "@babel/core": "~7.29.0",
+    "@babel/preset-env": "^7.29.0",
+    "chai": "^4.5.0",
+    "mocha": "^10.8.2",
     "release-it": "^15.11.0"
   },
   "dependencies": {
